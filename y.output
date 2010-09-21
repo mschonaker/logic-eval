@@ -1,0 +1,224 @@
+   0  $accept : program $end
+
+   1  program : expression
+   2          |
+   3          | error
+
+   4  expression : expression OR term
+   5             | term
+   6             | expression OR error
+
+   7  term : term AND factor
+   8       | factor
+   9       | term AND error
+
+  10  factor : TRUE
+  11         | FALSE
+  12         | NOT factor
+  13         | LEFT_PARENTHESES expression RIGHT_PARENTHESES
+  14         | LEFT_PARENTHESES expression error
+  15         | LEFT_PARENTHESES error
+  16         | NOT error
+
+state 0
+	$accept : . program $end  (0)
+	program : .  (2)
+
+	error  shift 1
+	TRUE  shift 2
+	FALSE  shift 3
+	NOT  shift 4
+	LEFT_PARENTHESES  shift 5
+	$end  reduce 2
+
+	program  goto 6
+	expression  goto 7
+	term  goto 8
+	factor  goto 9
+
+
+state 1
+	program : error .  (3)
+
+	.  reduce 3
+
+
+state 2
+	factor : TRUE .  (10)
+
+	.  reduce 10
+
+
+state 3
+	factor : FALSE .  (11)
+
+	.  reduce 11
+
+
+state 4
+	factor : NOT . factor  (12)
+	factor : NOT . error  (16)
+
+	error  shift 10
+	TRUE  shift 2
+	FALSE  shift 3
+	NOT  shift 4
+	LEFT_PARENTHESES  shift 5
+	.  error
+
+	factor  goto 11
+
+
+state 5
+	factor : LEFT_PARENTHESES . expression RIGHT_PARENTHESES  (13)
+	factor : LEFT_PARENTHESES . expression error  (14)
+	factor : LEFT_PARENTHESES . error  (15)
+
+	error  shift 12
+	TRUE  shift 2
+	FALSE  shift 3
+	NOT  shift 4
+	LEFT_PARENTHESES  shift 5
+	.  error
+
+	expression  goto 13
+	term  goto 8
+	factor  goto 9
+
+
+state 6
+	$accept : program . $end  (0)
+
+	$end  accept
+
+
+state 7
+	program : expression .  (1)
+	expression : expression . OR term  (4)
+	expression : expression . OR error  (6)
+
+	OR  shift 14
+	$end  reduce 1
+
+
+state 8
+	expression : term .  (5)
+	term : term . AND factor  (7)
+	term : term . AND error  (9)
+
+	AND  shift 15
+	$end  reduce 5
+	error  reduce 5
+	OR  reduce 5
+	RIGHT_PARENTHESES  reduce 5
+
+
+state 9
+	term : factor .  (8)
+
+	.  reduce 8
+
+
+state 10
+	factor : NOT error .  (16)
+
+	.  reduce 16
+
+
+state 11
+	factor : NOT factor .  (12)
+
+	.  reduce 12
+
+
+state 12
+	factor : LEFT_PARENTHESES error .  (15)
+
+	.  reduce 15
+
+
+state 13
+	expression : expression . OR term  (4)
+	expression : expression . OR error  (6)
+	factor : LEFT_PARENTHESES expression . RIGHT_PARENTHESES  (13)
+	factor : LEFT_PARENTHESES expression . error  (14)
+
+	error  shift 16
+	OR  shift 14
+	RIGHT_PARENTHESES  shift 17
+	.  error
+
+
+state 14
+	expression : expression OR . term  (4)
+	expression : expression OR . error  (6)
+
+	error  shift 18
+	TRUE  shift 2
+	FALSE  shift 3
+	NOT  shift 4
+	LEFT_PARENTHESES  shift 5
+	.  error
+
+	term  goto 19
+	factor  goto 9
+
+
+state 15
+	term : term AND . factor  (7)
+	term : term AND . error  (9)
+
+	error  shift 20
+	TRUE  shift 2
+	FALSE  shift 3
+	NOT  shift 4
+	LEFT_PARENTHESES  shift 5
+	.  error
+
+	factor  goto 21
+
+
+state 16
+	factor : LEFT_PARENTHESES expression error .  (14)
+
+	.  reduce 14
+
+
+state 17
+	factor : LEFT_PARENTHESES expression RIGHT_PARENTHESES .  (13)
+
+	.  reduce 13
+
+
+state 18
+	expression : expression OR error .  (6)
+
+	.  reduce 6
+
+
+state 19
+	expression : expression OR term .  (4)
+	term : term . AND factor  (7)
+	term : term . AND error  (9)
+
+	AND  shift 15
+	$end  reduce 4
+	error  reduce 4
+	OR  reduce 4
+	RIGHT_PARENTHESES  reduce 4
+
+
+state 20
+	term : term AND error .  (9)
+
+	.  reduce 9
+
+
+state 21
+	term : term AND factor .  (7)
+
+	.  reduce 7
+
+
+9 terminals, 5 nonterminals
+17 grammar rules, 22 states
