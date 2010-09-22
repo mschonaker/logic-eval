@@ -7,7 +7,7 @@
 
 %%
 program
-  : expression { yyout("result: " + $1.obj.toString());}
+  : expression { result = (Boolean) $1.obj; }
   | { yyout("Empty program");}
   
   | error { yyerror("Not an expression");}
@@ -41,20 +41,26 @@ factor
 
 private ParserDelegate delegate;
 
+private Boolean result = null;
+
 public void setDelegate(ParserDelegate delegate) {
 	this.delegate = delegate;
 } 
 
-public int yylex() {
+private int yylex() {
 	int t = delegate.getToken();
 	yylval = delegate.getVal();
 	return t;
 }
 
-public void yyerror(String s) {
+private void yyerror(String s) {
 	delegate.showError(s);
 }
 
-public void yyout(String s) {
+private void yyout(String s) {
 	delegate.showOutput(s);
+}
+
+public Boolean getResult() {
+  return result;
 }

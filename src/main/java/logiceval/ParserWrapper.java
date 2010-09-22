@@ -25,7 +25,7 @@ public class ParserWrapper implements ParserDelegate {
 	}
 
 	private Parser parser;
-	private ParserVal current = new ParserVal();;
+	private ParserVal current = new ParserVal();
 
 	private StreamTokenizer in;
 	private PrintStream out, err;
@@ -77,11 +77,13 @@ public class ParserWrapper implements ParserDelegate {
 		out.println(s);
 	}
 
-	public void parse() {
+	public Boolean eval() {
 		if (parser.yyparse() != 0)
 			out.println("PARSE FAILURE");
 		else
 			out.println("PARSE SUCCESSFUL");
+
+		return parser.getResult();
 	}
 
 	public ParserVal getVal() {
