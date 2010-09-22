@@ -41,7 +41,6 @@ public class ParserWrapper implements ParserDelegate {
 		parser.yydebug = debug;
 	}
 
-	@Override
 	public int getToken() {
 
 		try {
@@ -70,12 +69,10 @@ public class ParserWrapper implements ParserDelegate {
 		}
 	}
 
-	@Override
 	public void showError(String s) {
 		err.println(s);
 	}
 
-	@Override
 	public void showOutput(String s) {
 		out.println(s);
 	}
@@ -87,7 +84,6 @@ public class ParserWrapper implements ParserDelegate {
 			out.println("PARSE SUCCESSFUL");
 	}
 
-	@Override
 	public ParserVal getVal() {
 		return current;
 	}

@@ -1,0 +1,8 @@
+Simple Logic Expression Parser and Evaluator
+--------------------------------------------
+
+Requires BYACC/J. Downloadable from http://byaccj.sourceforge.net/
+In Debian-based Linux distributions:
+sudo apt-get install byacc-j
+
+
