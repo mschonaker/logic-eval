@@ -57,6 +57,7 @@
 						<argument>-J</argument>
 						<argument>-Jpackage=logiceval</argument>
 						<argument>-Jnorun</argument>
+						<argument>-Jthrows=LexicalException</argument>
 						<argument>logic.y</argument>
 					</arguments>
 				</configuration>

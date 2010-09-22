@@ -2,7 +2,7 @@ package logiceval;
 
 public interface ParserDelegate {
 
-	int getToken();
+	int getToken() throws LexicalException;
 
 	ParserVal getVal();
 

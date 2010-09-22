@@ -1,6 +1,10 @@
 %{
 
 // Imports.
+
+import java.util.List;
+import java.util.LinkedList;
+
 %}
 
 %token TRUE FALSE AND OR NOT LEFT_PARENTHESES RIGHT_PARENTHESES
@@ -43,11 +47,13 @@ private ParserDelegate delegate;
 
 private Boolean result = null;
 
+private List<String> errors = new LinkedList<String>();
+
 public void setDelegate(ParserDelegate delegate) {
 	this.delegate = delegate;
 } 
 
-private int yylex() {
+private int yylex() throws LexicalException {
 	int t = delegate.getToken();
 	yylval = delegate.getVal();
 	return t;
@@ -55,6 +61,7 @@ private int yylex() {
 
 private void yyerror(String s) {
 	delegate.showError(s);
+	errors.add(s);
 }
 
 private void yyout(String s) {
@@ -63,4 +70,8 @@ private void yyout(String s) {
 
 public Boolean getResult() {
   return result;
+}
+
+public List<String> getErrors() {
+  return errors;
 }

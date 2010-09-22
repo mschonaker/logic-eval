@@ -41,7 +41,7 @@ public class ParserWrapper implements ParserDelegate {
 		parser.yydebug = debug;
 	}
 
-	public int getToken() {
+	public int getToken() throws LexicalException {
 
 		try {
 			int nextToken = in.nextToken();
@@ -54,7 +54,7 @@ public class ParserWrapper implements ParserDelegate {
 				try {
 					return Token.valueOf(in.sval.toUpperCase()).getCode();
 				} catch (IllegalArgumentException e) {
-					throw new RuntimeException("Lexical error", e);
+					throw new LexicalException("Lexical error", e);
 				}
 
 			default:
@@ -62,10 +62,10 @@ public class ParserWrapper implements ParserDelegate {
 					return Token.LEFT_PARENTHESES.getCode();
 				if (nextToken == ')')
 					return Token.RIGHT_PARENTHESES.getCode();
-				throw new RuntimeException("Lexical error");
+				throw new LexicalException("Lexical error: " + (char) nextToken);
 			}
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new LexicalException(e);
 		}
 	}
 
@@ -77,11 +77,17 @@ public class ParserWrapper implements ParserDelegate {
 		out.println(s);
 	}
 
-	public Boolean eval() {
-		if (parser.yyparse() != 0)
-			out.println("PARSE FAILURE");
-		else
-			out.println("PARSE SUCCESSFUL");
+	public Boolean eval() throws LexicalException, SyntaxException {
+		if (parser.yyparse() != 0) {
+
+			StringBuilder es = new StringBuilder();
+
+			for (String s : parser.getErrors())
+				es.append(s).append("\n");
+
+			throw new SyntaxException("Syntax errors during parsing: "
+					+ es.toString());
+		}
 
 		return parser.getResult();
 	}
