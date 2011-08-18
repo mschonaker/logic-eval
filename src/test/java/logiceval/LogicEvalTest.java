@@ -39,4 +39,33 @@ public class LogicEvalTest {
 		assertFalse(eval.eval());
 
 	}
+	
+	@Test
+	public void testAnd() throws Exception {
+		LogicEval eval = new LogicEval(new StringReader("false and true"), System.out,
+				System.err, false, Collections.<String, Boolean> emptyMap());
+		assertFalse(eval.eval());
+		
+	}
+	
+	@Test
+	public void testAnd2() throws Exception {
+		LogicEval eval = new LogicEval(new StringReader("true and true"), System.out,
+				System.err, false, Collections.<String, Boolean> emptyMap());
+		assertTrue(eval.eval());
+	}
+	
+	@Test
+	public void testAnd3() throws Exception {
+		LogicEval eval = new LogicEval(new StringReader("true and false"), System.out,
+				System.err, false, Collections.<String, Boolean> emptyMap());
+		assertFalse(eval.eval());
+	}
+	
+	@Test
+	public void testAnd4() throws Exception {
+		LogicEval eval = new LogicEval(new StringReader("false and false"), System.out,
+				System.err, false, Collections.<String, Boolean> emptyMap());
+		assertFalse(eval.eval());
+	}
 }
