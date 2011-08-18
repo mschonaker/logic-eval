@@ -7,38 +7,40 @@ import java.util.LinkedList;
 
 import logiceval.LexicalException;
 import logiceval.ParserDelegate;
+import logiceval.Symbol;
 
 %}
 
-%token TRUE FALSE AND OR NOT LEFT_PARENTHESES RIGHT_PARENTHESES
+%token TRUE FALSE AND OR NOT LEFT_PARENTHESES RIGHT_PARENTHESES ID
 
 %%
 program
-  : expression { result = (Boolean) $1.obj; }
+  : expression { result = $1.bool; }
   | { yyout("Empty program");}
   
   | error { yyerror("Not an expression");}
   ;
 
 expression
-  : expression OR term {$$ = new ParserVal((Boolean) $1.obj || (Boolean) $3.obj); yyout("or"); } 
-  | term { $$ = new ParserVal($1.obj); }
+  : expression OR term {$$ = new Symbol($1.bool || $3.bool); } 
+  | term
   
   | expression OR error { yyerror("Término inválido"); }
   ;
   
 term
-  : term AND factor {$$ = new ParserVal((Boolean) $1.obj || (Boolean) $2.obj); yyout("and"); }
-  | factor { $$ = new ParserVal($1.obj); }
+  : term AND factor {$$ = new Symbol($1.bool && $3.bool); }
+  | factor
   
   | term AND error { yyerror("Factor inválido"); }
   ;
   
 factor
-  : TRUE { $$ = new ParserVal(Boolean.TRUE); yyout("true"); }
-  | FALSE { $$ = new ParserVal(Boolean.FALSE); yyout("false"); }
-  | NOT factor { $$ = new ParserVal(!(Boolean)$2.obj); yyout("not"); }
-  | LEFT_PARENTHESES expression RIGHT_PARENTHESES { $$ = new ParserVal($2.obj); }
+  : TRUE 
+  | FALSE 
+  | ID 
+  | NOT factor { $$ = new Symbol(!$2.bool); }
+  | LEFT_PARENTHESES expression RIGHT_PARENTHESES { $$ = $2; }
   
   | LEFT_PARENTHESES expression error { yyerror("Se esperaba ')'"); } 
   | LEFT_PARENTHESES error { yyerror("Expresión inválida"); }
@@ -46,17 +48,11 @@ factor
   ;
 %%
 
-private ParserDelegate delegate;
+private final ParserDelegate delegate;
+private boolean result = false;
 
-private Boolean result = null;
-
-private List<String> errors = new LinkedList<String>();
-
-public void setDelegate(ParserDelegate delegate) {
+public Parser(ParserDelegate delegate, boolean debug) {
 	this.delegate = delegate;
-}
-
-public void setDebug(boolean debug) {
 	this.yydebug = debug;
 }
 
@@ -65,24 +61,20 @@ public int parse() throws LexicalException {
 }
 
 private int yylex() throws LexicalException {
-	int t = delegate.getToken();
-	yylval = delegate.getVal();
+	Symbol s = delegate.getSymbol();
+	int t = s.token;
+	yylval = s;
 	return t;
 }
 
 private void yyerror(String s) {
 	delegate.showError(s);
-	errors.add(s);
 }
 
 private void yyout(String s) {
 	delegate.showOutput(s);
 }
 
-public Boolean getResult() {
+public boolean getResult() {
   return result;
-}
-
-public List<String> getErrors() {
-  return errors;
 }

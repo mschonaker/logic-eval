@@ -58,6 +58,8 @@
 						<argument>-Jpackage=logiceval.generated</argument>
 						<argument>-Jnorun</argument>
 						<argument>-Jthrows=LexicalException</argument>
+						<argument>-Jsemantic=Symbol</argument>
+						<argument>-Jnoconstruct</argument>
 						<argument>logic.y</argument>
 					</arguments>
 				</configuration>

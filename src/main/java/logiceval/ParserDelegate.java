@@ -1,15 +1,15 @@
 package logiceval;
 
-import logiceval.generated.ParserVal;
+import java.util.List;
 
 public interface ParserDelegate {
 
-	int getToken() throws LexicalException;
-
-	ParserVal getVal();
+	Symbol getSymbol() throws LexicalException;
 
 	void showError(String s);
 
 	void showOutput(String s);
 
+	List<String> getErrors();
+	
 }
