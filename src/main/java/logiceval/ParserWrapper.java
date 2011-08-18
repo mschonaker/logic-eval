@@ -5,6 +5,9 @@ import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StreamTokenizer;
 
+import logiceval.generated.Parser;
+import logiceval.generated.ParserVal;
+
 public class ParserWrapper implements ParserDelegate {
 
 	public static enum Token {
@@ -38,7 +41,7 @@ public class ParserWrapper implements ParserDelegate {
 		this.err = err;
 		parser = new Parser();
 		parser.setDelegate(this);
-		parser.yydebug = debug;
+		parser.setDebug(debug);
 	}
 
 	public int getToken() throws LexicalException {
@@ -78,7 +81,7 @@ public class ParserWrapper implements ParserDelegate {
 	}
 
 	public Boolean eval() throws LexicalException, SyntaxException {
-		if (parser.yyparse() != 0) {
+		if (parser.parse() != 0) {
 
 			StringBuilder es = new StringBuilder();
 

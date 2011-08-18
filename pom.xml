@@ -19,8 +19,8 @@
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
+					<source>1.6</source>
+					<target>1.6</target>
 					<optimize>true</optimize>
 					<debug>true</debug>
 				</configuration>
@@ -31,7 +31,7 @@
 				<executions>
 					<execution>
 						<id>attach-sources</id>
-						<phase>verify</phase>
+						<phase>package</phase>
 						<goals>
 							<goal>jar</goal>
 						</goals>
@@ -52,10 +52,10 @@
 				</executions>
 				<configuration>
 					<executable>byaccj</executable>
-					<workingDirectory>${basedir}/src/main/java/logiceval</workingDirectory>
+					<workingDirectory>${basedir}/src/main/java/logiceval/generated</workingDirectory>
 					<arguments>
 						<argument>-J</argument>
-						<argument>-Jpackage=logiceval</argument>
+						<argument>-Jpackage=logiceval.generated</argument>
 						<argument>-Jnorun</argument>
 						<argument>-Jthrows=LexicalException</argument>
 						<argument>logic.y</argument>

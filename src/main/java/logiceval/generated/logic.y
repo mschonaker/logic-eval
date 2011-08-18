@@ -5,6 +5,9 @@
 import java.util.List;
 import java.util.LinkedList;
 
+import logiceval.LexicalException;
+import logiceval.ParserDelegate;
+
 %}
 
 %token TRUE FALSE AND OR NOT LEFT_PARENTHESES RIGHT_PARENTHESES
@@ -51,7 +54,15 @@ private List<String> errors = new LinkedList<String>();
 
 public void setDelegate(ParserDelegate delegate) {
 	this.delegate = delegate;
-} 
+}
+
+public void setDebug(boolean debug) {
+	this.yydebug = debug;
+}
+
+public int parse() throws LexicalException {
+	return yyparse();
+}
 
 private int yylex() throws LexicalException {
 	int t = delegate.getToken();
